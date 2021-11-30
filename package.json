@@ -4,7 +4,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build --base-href /mbf-custom-ui/dist/mbf-custom-ui/",
+    "build": "ng build --base-href /mbf-custom-ui/dist/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
