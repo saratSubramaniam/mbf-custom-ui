@@ -1,0 +1,81 @@
+<div class="chatbot-holder">
+
+  <div class="bot-header">
+    <div>
+      <img class="img-circle" src="{{deployPath}}bot-transparent.png" alt="Logo" title="Dot the bot" />
+    </div>
+    <div class="dot-header">
+      Dot the bot
+    </div>
+    <div class="company-logo">
+      <img src="{{deployPath}}rs-logo.png" alt="Resource Solutions" title="Resource Solutions" />
+    </div>
+  </div>
+
+  <div class="chat-list-holder" [ngClass]="{'fade': showQuickLinks}">
+    <div class="chat-item" *ngFor="let chat of chats" [ngClass]="{
+        'user': (chat.type == 0),
+        'bot': (chat.type == 1),
+        'bot-loading': (chat.type == 2),
+        'fade': (showBotLoader && chat.type != 2)
+      }">
+      <div class="chat-icon" *ngIf="(chat.type == 1 || chat.type == 2)">
+        <img src="{{deployPath}}bot.png" />
+        <span>Dot</span>
+      </div>
+
+      <div class="chat-content">
+        <div *ngIf="chat.displayType == 'text'" [innerHTML]="chat.text"></div>
+        <div *ngIf="chat.displayType == 'button'">
+
+          <div [ngSwitch]="chat.buttonType">
+            <!-- the same view can be shown in more than one case -->
+            <ng-container *ngSwitchCase="'AdaptiveCard'">
+              <div class="chat-button-text" [innerHTML]="chat.text"></div>
+              <div class="chat-button-image">
+                <img [src]="chat.imageURL" />
+              </div>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'ActionButton'">
+              <div class="chat-button-text" *ngIf="chat.text?.length > 0" [innerHTML]="chat.text"></div>
+              <div class="chat-button-list">
+                <div class="chat-button-content" (click)="sendChat(button.text)" *ngFor="let button of chat.buttons">
+                  <div [innerHTML]="button.text"></div>
+                </div>
+              </div>
+            </ng-container>
+
+            <ng-container *ngSwitchCase="'FileDownload'">
+              <div class="download-button-content" (click)="downloadFile(button.downloadUrl)"
+                *ngFor="let button of chat.buttons">
+                <span [innerHTML]="button.text"></span>
+                <img src="{{deployPath}}download.png" />
+              </div>
+            </ng-container>
+            <!--default case when there are no matches -->
+            <ng-container *ngSwitchDefault>
+              <div class="chat-button-text" [innerHTML]="chat.text"></div>
+            </ng-container>
+          </div>
+        </div>
+
+        <div class="chat-loader-text">
+          <div class="loader-inner">
+            <div></div>
+            <div></div>
+            <div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="input-holder" [ngClass]="{'fade': showBotLoader || showChatBotInvokeError}">
+    <input #chatBox type="text" (keyup)="enterPressed($event)" placeholder="Reply to Dot the bot">
+    <span title="Send" (click)="sendChat(null)">
+      <img src="{{deployPath}}/send.png" />
+    </span>
+  </div>
+</div>

@@ -1,0 +1,78 @@
+* {
+    font-family: "Noto Sans", sans-serif;
+    box-sizing: border-box;
+}
+
+/* noto-sans-regular - latin */
+@font-face {
+    font-family: "Noto Sans";
+    font-style: normal;
+    font-weight: 400;
+    src: local("Noto Sans"), local("NotoSans"), url("fonts/noto-sans-v7-latin-regular.woff2") format("woff2"),
+        /* Chrome 26+, Opera 23+, Firefox 39+ */ url("fonts/noto-sans-v7-latin-regular.woff") format("woff");
+    /* Chrome 6+, Firefox 3.6+, IE 9+, Safari 5.1+ */
+}
+
+html,
+body {
+    width: calc(100% - 30px);
+    height: calc(100% - 30px);
+    min-width: 375px;
+    overflow: auto;
+}
+
+body {
+    margin: 30px;
+    background-color: #f3f3f3;
+}
+
+/* Scrollbar styling - start */
+::-webkit-scrollbar {
+    width: 9px;
+    height: 9px;
+}
+
+::-webkit-scrollbar-track {
+    background: #ddd;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #bbb;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #aaa;
+}
+
+/* Scrollbar styling - end */
+
+.button-disabled {
+    pointer-events: none;
+    opacity: 0.65;
+}
+
+@keyframes ball-beat {
+    50% {
+        opacity: 0.2;
+        -webkit-transform: scale(0.75);
+        transform: scale(0.75);
+    }
+
+    100% {
+        opacity: 1;
+        -webkit-transform: scale(1);
+        transform: scale(1);
+    }
+}
+
+@media (max-width: 768px) {
+    html,
+    body {
+        width: 100%;
+        height: calc(100% - 2px);
+    }
+
+    body {
+        margin: 0;
+    }
+}
