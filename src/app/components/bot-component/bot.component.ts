@@ -194,10 +194,12 @@ export class BotComponent implements OnInit {
   }
 
   enterPressed(event: any): void {
-    event.preventDefault();
-    // Number 13 is the "Enter" key on the keyboard
-    if (event.keyCode === 13) {
-      this.sendChat(null);
+    if (!this.showBotLoader) {
+      event.preventDefault();
+      // Number 13 is the "Enter" key on the keyboard
+      if (event.keyCode === 13) {
+        this.sendChat(null);
+      }
     }
   }
 
