@@ -241,6 +241,10 @@
   margin-bottom: 7px;
 }
 
+.chatbot-holder .chat-list-holder .chat-content .chat-button-image {
+  height: 25vh;
+}
+
 .chatbot-holder .chat-list-holder .chat-content .chat-button-list {
   background-color: white;
   border: 0.5px solid #afafaf;
