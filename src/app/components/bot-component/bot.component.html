@@ -2,10 +2,10 @@
 
   <div class="bot-header">
     <div>
-      <img class="img-circle" src="{{deployPath}}bot-transparent.png" alt="Logo" title="Dot the bot" />
+      <img class="img-circle" src="{{deployPath}}bot-transparent.png" alt="Logo" title="Glyn" />
     </div>
     <div class="dot-header">
-      Dot the bot
+      Glyn
     </div>
     <div class="company-logo">
       <img src="{{deployPath}}rs-logo.png" alt="Resource Solutions" title="Resource Solutions" />
@@ -21,7 +21,7 @@
       }">
       <div class="chat-icon" *ngIf="(chat.type == 1 || chat.type == 2)">
         <img src="{{deployPath}}bot.png" />
-        <span>Dot</span>
+        <span>Glyn</span>
       </div>
 
       <div class="chat-content">
@@ -73,7 +73,7 @@
   </div>
 
   <div class="input-holder" [ngClass]="{'fade': showBotLoader || showChatBotInvokeError}">
-    <input #chatBox type="text" (keyup)="enterPressed($event)" placeholder="Reply to Dot the bot">
+    <input #chatBox type="text" (keyup)="enterPressed($event)" placeholder="Reply to Glyn">
     <span title="Send" (click)="sendChat(null)">
       <img src="{{deployPath}}/send.png" />
     </span>
