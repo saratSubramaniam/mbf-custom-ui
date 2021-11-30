@@ -13,23 +13,7 @@ export let httpOptions: any = {
     }
 };
 
-export let genericError = "Dot the Bot is currently unavailable, please contact the talent team with any queries at <a href='mailto:talent@10xds.com' target='_blank'>talent@10xds.com</a>";
-export let activityError = 'We could not send the message to Dot, please try again.';
+export let genericError = "Glyn is currently unavailable, please contact the support team with any queries at <a href='mailto:support@10xds.com' target='_blank'>support@10xds.com</a>";
+export let activityError = "We couldn't send the message to Glyn, please try again.";
 
 export let token = '2KMR7hthpqI.AHp_lJkSPF6QpGZGdJUxi0ZEQTYLQN7wRJZpEgmuKmI';
-export let staticChats: any[] = [
-    {
-        type: 1,
-        text: 'Hello, I\'m Dot and I can help you with your compliance related queries',
-        displayType: 'text',
-        buttons: []
-    },
-    {
-        type: 1,
-        text: 'Here’s some examples of questions you might like to ask:',
-        displayType: 'button',
-        buttons: [],
-        buttonType: 'text',
-        isFAQ: true
-    }
-];
