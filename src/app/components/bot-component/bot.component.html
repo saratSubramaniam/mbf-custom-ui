@@ -25,34 +25,39 @@
       </div>
 
       <div class="chat-content">
+        <!-- Response being normal text -->
         <div *ngIf="chat.displayType == 'text'" [innerHTML]="chat.text"></div>
+
+        <!-- Response being anything other than text -->
         <div *ngIf="chat.displayType == 'button'">
 
+          <!-- Different cases within non-textual responses -->
           <div [ngSwitch]="chat.buttonType">
-            <!-- the same view can be shown in more than one case -->
+
+            <!-- ADAPTIVE CARD -->
             <ng-container *ngSwitchCase="'AdaptiveCard'">
-              <div class="chat-button-text" [innerHTML]="chat.text"></div>
-              <div class="chat-button-image">
-                <img [src]="chat.imageURL" />
-              </div>
+              <div [innerHTML]="chat.adaptiveCardContent"></div>
             </ng-container>
 
+            <!-- HERO CARD/ACTION BUTTONS -->
             <ng-container *ngSwitchCase="'ActionButton'">
               <div class="chat-button-text" *ngIf="chat.text?.length > 0" [innerHTML]="chat.text"></div>
               <div class="chat-button-list">
-                <div class="chat-button-content" (click)="sendChat(button.text)" *ngFor="let button of chat.buttons">
-                  <div [innerHTML]="button.text"></div>
+                <div class="chat-button-content" (click)="sendChat(button.title)" *ngFor="let button of chat.buttons">
+                  <div [innerHTML]="button.title"></div>
                 </div>
               </div>
             </ng-container>
 
+            <!-- FILE DOWNLOAD/DOWNLOAD BUTTONS -->
             <ng-container *ngSwitchCase="'FileDownload'">
-              <div class="download-button-content" (click)="downloadFile(button.downloadUrl)"
+              <div class="download-button-content" (click)="downloadFile(button.contentUrl)"
                 *ngFor="let button of chat.buttons">
-                <span [innerHTML]="button.text"></span>
+                <span [innerHTML]="button.name"></span>
                 <img src="{{deployPath}}download.png" />
               </div>
             </ng-container>
+
             <!--default case when there are no matches -->
             <ng-container *ngSwitchDefault>
               <div class="chat-button-text" [innerHTML]="chat.text"></div>

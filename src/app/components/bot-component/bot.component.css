@@ -133,8 +133,9 @@
 }
 
 .chatbot-holder .chat-list-holder .chat-item.bot .chat-content {
-  background-color: #e5e5e5;
+  background-color: #f5f5f5;
   color: #3d3d3c;
+  border: 1px solid #e5e5e5;
 }
 
 .chatbot-holder .chat-list-holder .chat-item.bot-loading .chat-content {
@@ -241,9 +242,9 @@
   margin-bottom: 7px;
 }
 
-.chatbot-holder .chat-list-holder .chat-content .chat-button-image img {
+/* .chatbot-holder .chat-list-holder .chat-content .chat-button-image img {
   height: 25vh;
-}
+} */
 
 .chatbot-holder .chat-list-holder .chat-content .chat-button-list {
   background-color: white;

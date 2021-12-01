@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import * as _config from '../../config';
 import { Observable } from 'rxjs/internal/Observable';
 import { deployPath } from '../../../environments/environment';
+import * as AdaptiveCards from 'adaptivecards';
+import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-bot-component',
@@ -12,16 +14,19 @@ import { deployPath } from '../../../environments/environment';
 
 export class BotComponent implements OnInit {
   constructor(
-    private _httpClient: HttpClient
+    private _httpClient: HttpClient,
+    private _domSanitizer: DomSanitizer
   ) { }
 
   @ViewChild('chatBox') chatBox: any;
+  // @ViewChild('chatListHolder') chatListHolder: any
   @Output('triggerClose') triggerClose: EventEmitter<any> = new EventEmitter();
 
   deployPath = deployPath;
   conversationId = '';
   webSocketStreamURL = '';
-  chats: any[] = [{ type: 2, text: 'Typing', displayType: 'loader', buttons: [] }];
+  // chats: any[] = [{ type: 2, text: 'Typing', displayType: 'loader', buttons: [] }];
+  chats: any[] = [];
   showBotLoader = true;
   showChatBotInvokeError = false;
   showQuickLinks = false;
@@ -133,7 +138,7 @@ export class BotComponent implements OnInit {
         this.showBotLoader = false;
         this.botInvokeError();
       }
-    }, 30000);
+    }, 50000);
   }
 
   sendChat(buttonText: any): void {
@@ -143,6 +148,7 @@ export class BotComponent implements OnInit {
     } else {
       chatString = this.chatBox.nativeElement.value;
     }
+
     const url = _config.baseURL + '/' + this.conversationId + '/activities';
     const type = _config.methodTypes.POST;
 
@@ -157,7 +163,7 @@ export class BotComponent implements OnInit {
       'type': 'message',
       'text': chatString,
       'from': {
-        'id': 'default-user',
+        'id': 'default-user-13',
         'name': 'User'
       }
     };
@@ -181,7 +187,7 @@ export class BotComponent implements OnInit {
       this.sendReq(url, type, body, options).subscribe(
         (res: any) => {
           this.checkActivityTimeout();
-          console.log(res);
+          // console.log(res);
         },
         (error: any) => {
           console.log(error);
@@ -219,6 +225,7 @@ export class BotComponent implements OnInit {
           buttons: []
         };
 
+        // Remove the loader element, if it exists
         const loaderItem = this.chats.filter((chat: any) => chat.displayType === 'loader');
         if (loaderItem.length > 0) {
           this.chats.splice(this.chats.indexOf(loaderItem[0]), 1);
@@ -237,48 +244,63 @@ export class BotComponent implements OnInit {
         el.scrollTop = el.scrollHeight;
         this.showBotLoader = false;
       }, 0);
+    } else if (socketData.activities[0]?.type == "typing") {
+      // Show the loader element, if it doesn't exist
+      const loaderItem = this.chats.filter((chat: any) => chat.displayType === 'loader');
+      if (loaderItem.length == 0) {
+        this.chats.push(
+          { type: 2, text: 'Typing', displayType: 'loader', buttons: [] }
+        );
+
+        const el = document.getElementsByClassName('chat-list-holder')[0];
+        setTimeout(() => {
+          el.scrollTop = el.scrollHeight;
+          this.showBotLoader = false;
+        }, 0);
+      }
     }
   }
 
   renderButtons(chatObj: any, attachments: Array<any>): void {
     for (const item of attachments) {
-
       switch (item.contentType) {
         case 'application/vnd.microsoft.card.hero':
+          chatObj.buttonType = 'ActionButton';
+
           if (!chatObj.text || chatObj.text.length === 0) {
             chatObj.text = item.content.text;
           }
 
-          for (const buttonItem of item.content.buttons) {
-            chatObj.buttons.push({
-              text: buttonItem.title
-            });
-          }
-
-          chatObj.buttonType = 'ActionButton';
+          chatObj.buttons = item.content.buttons;
 
           break;
 
         case "application/vnd.microsoft.card.adaptive":
           chatObj.buttonType = "AdaptiveCard";
-          chatObj.text = item.content.body.filter((i: any) => i.type == 'TextBlock')[0].text;
-          chatObj.imageURL = item.content.body.filter((i: any) => i.type == 'Image')[0].url;
+          // 1. create an instance of adaptive cards
+          let adaptiveCard = new AdaptiveCards.AdaptiveCard();
+          // 2. parse the json payload
+          adaptiveCard.parse(item.content);
+          // 3. render the card 
+          let adaptiveCardContent: any = adaptiveCard.render()?.innerHTML;
+          chatObj.adaptiveCardContent = this._domSanitizer.bypassSecurityTrustHtml(adaptiveCardContent);
+
           break;
 
         case 'application/pdf':
         case 'application/xlsx':
         case 'application/xls':
         case 'application/docx':
-          if (chatObj.text.length === 0) {
+          chatObj.buttonType = 'FileDownload';
+
+          if (!chatObj.text || chatObj.text.length === 0) {
             chatObj.text = item.name;
           }
 
           chatObj.buttons.push({
-            text: item.name,
-            downloadUrl: item.contentUrl
+            name: item.name,
+            contentUrl: item.contentUrl
           });
-
-          chatObj.buttonType = 'FileDownload';
 
           break;
       }
