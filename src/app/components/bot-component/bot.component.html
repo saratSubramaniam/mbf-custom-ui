@@ -1,17 +1,6 @@
+<img (click)="refreshChat()" *ngIf="showRefresh" class="bot-refresh" title="Refresh Chat"
+  src="{{deployPath}}refresh.png" />
 <div class="chatbot-holder">
-
-  <div class="bot-header">
-    <div>
-      <img class="img-circle" src="{{deployPath}}bot-transparent.png" alt="Logo" title="Glyn" />
-    </div>
-    <div class="dot-header">
-      Glyn
-    </div>
-    <div class="company-logo">
-      <img src="{{deployPath}}rs-logo.png" alt="GWC Logistics" title="GWC Logistics" />
-    </div>
-  </div>
-
   <div class="chat-list-holder" [ngClass]="{'fade': showQuickLinks}">
     <div class="chat-item" *ngFor="let chat of chats" [ngClass]="{
         'user': (chat.type == 0),
@@ -20,8 +9,8 @@
         'fade': (showBotLoader && chat.type != 2)
       }">
       <div class="chat-icon" *ngIf="(chat.type == 1 || chat.type == 2)">
-        <img src="{{deployPath}}bot.png" />
-        <span>Glyn</span>
+        <img src="https://10xdschatbotcdn.azureedge.net/botIcon.png" />
+        <!-- <span>Glyn</span> -->
       </div>
 
       <div class="chat-content">

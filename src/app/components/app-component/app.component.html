@@ -1,1 +1,4 @@
-<app-bot-component></app-bot-component>
+<app-header></app-header>
+
+<app-home (startChatEvent)="startChat = true" *ngIf="!startChat"></app-home>
+<app-bot *ngIf="startChat"></app-bot>

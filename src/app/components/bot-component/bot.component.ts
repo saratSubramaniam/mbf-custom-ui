@@ -7,7 +7,7 @@ import * as AdaptiveCards from 'adaptivecards';
 import { DomSanitizer } from '@angular/platform-browser';
 
 @Component({
-  selector: 'app-bot-component',
+  selector: 'app-bot',
   templateUrl: `./bot.component.html`,
   styleUrls: ['./bot.component.css']
 })
@@ -19,8 +19,6 @@ export class BotComponent implements OnInit {
   ) { }
 
   @ViewChild('chatBox') chatBox: any;
-  // @ViewChild('chatListHolder') chatListHolder: any
-  @Output('triggerClose') triggerClose: EventEmitter<any> = new EventEmitter();
 
   deployPath = deployPath;
   conversationId = '';
@@ -31,6 +29,7 @@ export class BotComponent implements OnInit {
   showChatBotInvokeError = false;
   showQuickLinks = false;
   socket: WebSocket | undefined;
+  showRefresh = false;
 
   proactiveTimeout: any;
   activityTimeout: any;
@@ -78,6 +77,7 @@ export class BotComponent implements OnInit {
           );
           this.socket.onopen = function () {
             console.log('onopen');
+            compInstance.showRefresh = true;
             compInstance.showBotLoader = false;
             // compInstance.checkProactiveTimeout();
           };
@@ -112,6 +112,7 @@ export class BotComponent implements OnInit {
 
   botInvokeError(): void {
     this.showChatBotInvokeError = true;
+    this.showBotLoader = false;
     this.chats.splice(this.chats.length - 1, 1);
     this.chats.push({
       type: 1,
@@ -134,7 +135,7 @@ export class BotComponent implements OnInit {
 
   checkActivityTimeout(): void {
     this.activityTimeout = setTimeout(() => {
-      if (this.chats[this.chats.length - 1].displayType === 'loader') {
+      if (this.chats[this.chats.length - 1]?.displayType === 'loader') {
         this.showBotLoader = false;
         this.botInvokeError();
       }
@@ -179,6 +180,11 @@ export class BotComponent implements OnInit {
       this.chats.push(
         { type: 0, text: chatString, displayType: 'text', buttons: [] }
       );
+
+      const loaderItem = this.chats.filter((chat: any) => chat.displayType === 'loader');
+      if (loaderItem.length > 0) {
+        this.chats.splice(this.chats.indexOf(loaderItem[0]), 1);
+      }
 
       this.chats.push(
         { type: 2, text: 'Typing', displayType: 'loader', buttons: [] }
@@ -325,7 +331,9 @@ export class BotComponent implements OnInit {
     });
   }
 
-  closeBot(): void {
-    this.triggerClose.emit(true);
+  refreshChat(): void {
+    this.socket?.close();
+    this.chats = [];
+    this.startConversation();
   }
 }

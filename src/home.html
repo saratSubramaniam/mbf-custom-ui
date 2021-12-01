@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+
+    <head>
+        <style>
+            body {
+                margin: 0;
+            }
+
+            .bg {
+                background-image: url(./assets/bg.png);
+                width: calc(100% - 20px);
+                height: calc(100% - 20px);
+                position: fixed;
+                background-repeat: round;
+                margin: 10px;
+            }
+
+            iframe {
+                border-radius: 5px;
+                border: none;
+                height: 500px;
+                width: 350px;
+                position: absolute;
+                bottom: -50px;
+                right: 10px;
+                opacity: 0;
+                transform: translateY(350px);
+                transition: transform .75s, opacity .75s;
+                pointer-events: none;
+            }
+
+            img {
+                z-index: 1;
+                cursor: pointer;
+                position: absolute;
+                bottom: 0px;
+                right: 0px;
+            }
+
+            span {
+                border: none;
+                background-color: antiquewhite;
+                padding: 3px 6px;
+                position: absolute;
+                right: 335px;
+                border-radius: 30px;
+                cursor: pointer;
+                opacity: 0;
+                transform: translateY(490px);
+                transition: transform .75s, opacity .75s;
+                pointer-events: none;
+            }
+
+            .iframe-translate {
+                opacity: 1 !important;
+                transform: translateY(-60px) !important;
+                pointer-events: all;
+            }
+
+            .span-translate {
+                opacity: 1 !important;
+                transform: translateY(65px) !important;
+                pointer-events: all;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="bg"></div>
+        <script>
+            var chatEl = "<img onclick='showChatbot()' src='https://10xdschatbotcdn.azureedge.net/ChatBubble.png'/><span onclick='closeChatbot()'>X</span><iframe src='https://saratsubramaniam.github.io/mbf-custom-ui/dist/index.html'></iframe>";
+            document.getElementsByClassName('bg')[0].innerHTML = chatEl;
+
+            function closeChatbot() {
+                document.getElementsByClassName('bg')[0].getElementsByTagName('iframe')[0].classList.remove('iframe-translate');
+                document.getElementsByClassName('bg')[0].getElementsByTagName('span')[0].classList.remove('span-translate');
+                setTimeout(function () {
+                    document.getElementsByClassName('bg')[0].getElementsByTagName('img')[0].style.opacity = 1;
+                    document.getElementsByClassName('bg')[0].getElementsByTagName('img')[0].style.pointerEvents = 'all';
+                }, 750);
+            }
+
+            function showChatbot() {
+                document.getElementsByClassName('bg')[0].getElementsByTagName('img')[0].style.opacity = 0;
+                document.getElementsByClassName('bg')[0].getElementsByTagName('img')[0].style.pointerEvents = 'none';
+
+                setTimeout(function () {
+                    document.getElementsByClassName('bg')[0].getElementsByTagName('iframe')[0].classList.add('iframe-translate');
+                    document.getElementsByClassName('bg')[0].getElementsByTagName('span')[0].classList.add('span-translate');
+                }, 0);
+            }
+        </script>
+    </body>
+
+</html>

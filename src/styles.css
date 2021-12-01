@@ -15,15 +15,15 @@
 
 html,
 body {
-    width: calc(100% - 30px);
-    height: calc(100% - 30px);
+    width: 100%;
+    height: 100%;
     min-width: 300px;
     overflow: auto;
 }
 
 body {
-    margin: 30px;
-    background-color: #f3f3f3;
+    margin: 0px;
+    background-color: #fff;
 }
 
 /* Scrollbar styling - start */
@@ -46,14 +46,14 @@ body {
 
 /* Scrollbar styling - end */
 
-.button-disabled {
+/* .button-disabled {
     pointer-events: none;
     opacity: 0.65;
-}
+} */
 
 @keyframes ball-beat {
     50% {
-        opacity: 0.2;
+        opacity: 0.5;
         -webkit-transform: scale(0.75);
         transform: scale(0.75);
     }
@@ -65,7 +65,17 @@ body {
     }
 }
 
-@media (max-width: 768px) {
+@keyframes fade-out {
+    0% {
+        opacity: 1;
+    }
+
+    100% {
+        opacity: 0;
+    }
+}
+
+/* @media (max-width: 768px) {
     html,
     body {
         width: 100%;
@@ -75,4 +85,4 @@ body {
     body {
         margin: 0;
     }
-}
+} */

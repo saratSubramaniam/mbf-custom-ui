@@ -1,0 +1,10 @@
+<div class="home-content" [ngClass]="{'fade-out': fadeOut}">
+    <img src="https://10xdschatbotcdn.azureedge.net/Welcome.png" />
+    <div>
+        "Welcome to <b>GWC Logistics</b>, I'm <span>Glyn</span> your virtual assistant. Ask me your queries and I will
+        assist you with my services."
+    </div>
+    <div (click)="startChat(); fadeOut = true">
+        Let's Chat
+    </div>
+</div>
