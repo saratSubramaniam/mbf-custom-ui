@@ -16,4 +16,4 @@ export let httpOptions: any = {
 export let genericError = "Glyn is currently unavailable, please contact the support team with any queries at <a href='mailto:support@10xds.com' target='_blank'>support@10xds.com</a>";
 export let activityError = "We couldn't send the message to Glyn, please try again.";
 
-export let token = '2KMR7hthpqI.AHp_lJkSPF6QpGZGdJUxi0ZEQTYLQN7wRJZpEgmuKmI';
+export let token = 'IhOOAT0wLHI.7-P2F4ZPkYtsWN79rWL1kf-NwkQraeOwM2YKBCVanfw';

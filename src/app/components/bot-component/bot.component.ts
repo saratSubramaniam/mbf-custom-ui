@@ -206,7 +206,7 @@ export class BotComponent implements OnInit {
   }
 
   enterPressed(event: any): void {
-    if (!this.showBotLoader) {
+    if (!this.showBotLoader && !this.showChatBotInvokeError) {
       event.preventDefault();
       // Number 13 is the "Enter" key on the keyboard
       if (event.keyCode === 13) {
@@ -269,6 +269,7 @@ export class BotComponent implements OnInit {
 
   renderButtons(chatObj: any, attachments: Array<any>): void {
     for (const item of attachments) {
+      // var item = chatObj;
       switch (item.contentType) {
         case 'application/vnd.microsoft.card.hero':
           chatObj.buttonType = 'ActionButton';
@@ -311,7 +312,8 @@ export class BotComponent implements OnInit {
           break;
       }
 
-      this.chats.push(chatObj);
+      var copyObject = Object.assign({}, chatObj);
+      this.chats.push(copyObject);
     }
   }
 
