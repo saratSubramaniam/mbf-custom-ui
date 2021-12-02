@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as _config from '../../config';
 import { Observable } from 'rxjs/internal/Observable';
 import { deployPath } from '../../../environments/environment';
 import * as AdaptiveCards from 'adaptivecards';
 import { DomSanitizer } from '@angular/platform-browser';
+import { SwiperOptions } from 'swiper/types/swiper-options';
 
 @Component({
   selector: 'app-bot',
@@ -15,7 +16,8 @@ import { DomSanitizer } from '@angular/platform-browser';
 export class BotComponent implements OnInit {
   constructor(
     private _httpClient: HttpClient,
-    private _domSanitizer: DomSanitizer
+    private _domSanitizer: DomSanitizer,
+    // private _renderer: Renderer2
   ) { }
 
   @ViewChild('chatBox') chatBox: any;
@@ -35,6 +37,15 @@ export class BotComponent implements OnInit {
   activityTimeout: any;
 
   requestManager: any = [null];
+
+  config: SwiperOptions = {
+    slidesPerView: 1,
+    keyboard: true,
+    mousewheel: true,
+    navigation: true,
+    spaceBetween: 30,
+    width: 375
+  };
 
   ngOnInit(): void {
     this.startConversation();
@@ -170,6 +181,11 @@ export class BotComponent implements OnInit {
     };
 
     if (chatString.length > 0) {
+      //Disable all previous bot responses
+      this.chats.filter(
+        (chat: any) => chat.type == 1 && !chat.isDisabled && (chat.isDisabled = true)
+      )
+
       this.showBotLoader = true;
 
       const el = document.getElementsByClassName('chat-list-holder')[0];
@@ -239,7 +255,11 @@ export class BotComponent implements OnInit {
 
         if (item.attachments && item.attachments.length > 0) {
           chatObj.displayType = 'button';
-          this.renderButtons(chatObj, item.attachments);
+          if (item.attachmentLayout == "carousel") {
+            this.renderCarousel(chatObj, item.attachments);
+          } else {
+            this.renderButtons(chatObj, item.attachments);
+          }
         } else if (item.text.length > 0) {
           this.chats.push(chatObj);
         }
@@ -267,9 +287,30 @@ export class BotComponent implements OnInit {
     }
   }
 
+  renderCarousel(chatObj: any, attachments: Array<any>): void {
+    chatObj.buttonType = "AdaptiveCardCarousel";
+
+    for (const item of attachments) {
+      // 1. create an instance of adaptive cards
+      let adaptiveCard = new AdaptiveCards.AdaptiveCard();
+      // 2. parse the json payload
+      adaptiveCard.parse(item.content);
+      // 3. render the card 
+      let adaptiveCardContent: any = adaptiveCard.render()?.innerHTML;
+      adaptiveCardContent = this._domSanitizer.bypassSecurityTrustHtml(adaptiveCardContent);
+
+      chatObj.buttons.push({
+        adaptiveCardContent: adaptiveCardContent
+      });
+    }
+
+    var copyObject = Object.assign({}, chatObj);
+    this.chats.push(copyObject);
+  }
+
   renderButtons(chatObj: any, attachments: Array<any>): void {
     for (const item of attachments) {
-      // var item = chatObj;
+
       switch (item.contentType) {
         case 'application/vnd.microsoft.card.hero':
           chatObj.buttonType = 'ActionButton';
@@ -289,8 +330,27 @@ export class BotComponent implements OnInit {
           // 2. parse the json payload
           adaptiveCard.parse(item.content);
           // 3. render the card 
-          let adaptiveCardContent: any = adaptiveCard.render()?.innerHTML;
-          chatObj.adaptiveCardContent = this._domSanitizer.bypassSecurityTrustHtml(adaptiveCardContent);
+          let adaptiveCardContent: any = adaptiveCard.render();
+          chatObj.adaptiveCardContent = this._domSanitizer.bypassSecurityTrustHtml(adaptiveCardContent.innerHTML);
+
+          // setTimeout(() => {
+          //   var x = adaptiveCardContent.getElementsByClassName('ac-pushButton');
+          //   x[0].addEventListener('click',
+          //     this.sendChat.bind(this)
+          //   );
+
+          // this._renderer.listen(
+          //   x[0],
+          //   'click',
+          //   (event: any) => {
+          //     // if (event.target instanceof HTMLAnchorElement) {
+          //     // Your custom anchor click event handler
+          //     alert("Test");
+          //     // }
+          //   }
+          // );
+
+          // }, 1000);
 
           break;
 

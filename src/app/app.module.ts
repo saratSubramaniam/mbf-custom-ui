@@ -10,6 +10,9 @@ import { BotComponent } from './components/bot-component/bot.component';
 import { HeaderComponent } from './components/header-component/header.component';
 import { HomeComponent } from './components/home-component/home.component';
 
+// NGX-SWIPER-WRAPPER
+import { SwiperModule } from 'ngx-swiper-wrapper';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,7 +23,8 @@ import { HomeComponent } from './components/home-component/home.component';
   imports: [
     BrowserModule,
     CommonModule,
-    HttpClientModule
+    HttpClientModule,
+    SwiperModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -6,7 +6,8 @@
         'user': (chat.type == 0),
         'bot': (chat.type == 1),
         'bot-loading': (chat.type == 2),
-        'fade': (showBotLoader && chat.type != 2)
+        'fade': (showBotLoader && chat.type != 2),
+        'disabled': chat.isDisabled
       }">
       <div class="chat-icon" *ngIf="(chat.type == 1 || chat.type == 2)">
         <img src="https://10xdschatbotcdn.azureedge.net/botIcon.png" />
@@ -22,6 +23,15 @@
 
           <!-- Different cases within non-textual responses -->
           <div [ngSwitch]="chat.buttonType">
+
+            <!-- CAROUSEL -->
+            <ng-container *ngSwitchCase="'AdaptiveCardCarousel'">
+              <swiper [config]="config">
+                <div *ngFor="let card of chat.buttons" [innerHTML]="card.adaptiveCardContent"></div>
+              </swiper>
+              <!-- <div class="swiper-button-prev"></div>
+              <div class="swiper-button-next"></div> -->
+            </ng-container>
 
             <!-- ADAPTIVE CARD -->
             <ng-container *ngSwitchCase="'AdaptiveCard'">
