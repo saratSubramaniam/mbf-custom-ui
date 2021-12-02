@@ -313,10 +313,6 @@ export class BotComponent implements OnInit {
   renderActions(chatObj: any, actions: Array<any>): void {
     chatObj.buttonType = 'ActionButton';
 
-    // if (!chatObj.text || chatObj.text.length === 0) {
-    //   chatObj.text = item.content.text;
-    // }
-
     chatObj.buttons = actions;
     this.chats.push(chatObj);
   }
