@@ -96,6 +96,10 @@ body {
     height: 8px;
 }
 
+.swiper-slide {
+    max-width: 400px !important;
+}
+
 .swiper-slide:last-child {
     margin-right: 0px !important;
 }
