@@ -89,7 +89,7 @@ export class BotComponent implements OnInit {
             console.log('onopen');
             compInstance.showRefresh = true;
             compInstance.showBotLoader = false;
-            compInstance.showStaticChats();
+            // compInstance.showStaticChats();
             // compInstance.checkProactiveTimeout();
           };
           this.socket.onmessage = function (e) {
@@ -123,7 +123,9 @@ export class BotComponent implements OnInit {
 
   showStaticChats(): void {
     for (let staticChat of _config.staticChats) {
-      this.renderChat(JSON.stringify(staticChat));
+      this.renderChat(
+        JSON.stringify(staticChat)
+      );
     }
   }
 
