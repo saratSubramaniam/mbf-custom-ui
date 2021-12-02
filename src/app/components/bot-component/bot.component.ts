@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, Renderer2 } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import * as _config from '../../config';
 import { Observable } from 'rxjs/internal/Observable';
@@ -17,7 +17,7 @@ export class BotComponent implements OnInit {
   constructor(
     private _httpClient: HttpClient,
     private _domSanitizer: DomSanitizer,
-    // private _renderer: Renderer2
+    private _renderer: Renderer2
   ) { }
 
   @ViewChild('chatBox') chatBox: any;
@@ -43,7 +43,7 @@ export class BotComponent implements OnInit {
     keyboard: true,
     mousewheel: true,
     navigation: true,
-    spaceBetween: 30
+    spaceBetween: 20
   };
 
   ngOnInit(): void {
@@ -89,6 +89,7 @@ export class BotComponent implements OnInit {
             console.log('onopen');
             compInstance.showRefresh = true;
             compInstance.showBotLoader = false;
+            compInstance.showStaticChats();
             // compInstance.checkProactiveTimeout();
           };
           this.socket.onmessage = function (e) {
@@ -117,6 +118,12 @@ export class BotComponent implements OnInit {
       console.log('WebSocket object is not supported in your browser.');
       compInstance.showBotLoader = false;
       compInstance.botInvokeError();
+    }
+  }
+
+  showStaticChats(): void {
+    for (let staticChat of _config.staticChats) {
+      this.renderChat(JSON.stringify(staticChat));
     }
   }
 
@@ -298,16 +305,29 @@ export class BotComponent implements OnInit {
       // 2. parse the json payload
       adaptiveCard.parse(item.content);
       // 3. render the card 
-      let adaptiveCardContent: any = adaptiveCard.render()?.innerHTML;
-      adaptiveCardContent = this._domSanitizer.bypassSecurityTrustHtml(adaptiveCardContent);
+      let adaptiveCardContent: any = adaptiveCard.render();
+      adaptiveCardContent = this._domSanitizer.bypassSecurityTrustHtml(adaptiveCardContent.innerHTML);
 
       chatObj.buttons.push({
         adaptiveCardContent: adaptiveCardContent
       });
     }
 
-    var copyObject = Object.assign({}, chatObj);
-    this.chats.push(copyObject);
+    setTimeout(() => {
+      var adaptiveCardButtons: any = document.getElementsByClassName('chat-list-holder')[0].getElementsByClassName('ac-pushButton');
+
+      for (let button of adaptiveCardButtons) {
+        this._renderer.listen(
+          button,
+          'click',
+          () => {
+            this.sendChat(button.innerText);
+          }
+        );
+      }
+    }, 0);
+
+    this.chats.push(chatObj);
   }
 
   renderActions(chatObj: any, actions: Array<any>): void {
@@ -342,25 +362,6 @@ export class BotComponent implements OnInit {
           // 3. render the card 
           let adaptiveCardContent: any = adaptiveCard.render();
           chatObj.adaptiveCardContent = this._domSanitizer.bypassSecurityTrustHtml(adaptiveCardContent.innerHTML);
-
-          // setTimeout(() => {
-          //   var x = adaptiveCardContent.getElementsByClassName('ac-pushButton');
-          //   x[0].addEventListener('click',
-          //     this.sendChat.bind(this)
-          //   );
-
-          // this._renderer.listen(
-          //   x[0],
-          //   'click',
-          //   (event: any) => {
-          //     // if (event.target instanceof HTMLAnchorElement) {
-          //     // Your custom anchor click event handler
-          //     alert("Test");
-          //     // }
-          //   }
-          // );
-
-          // }, 1000);
 
           break;
 
