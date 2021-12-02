@@ -43,8 +43,7 @@ export class BotComponent implements OnInit {
     keyboard: true,
     mousewheel: true,
     navigation: true,
-    spaceBetween: 30,
-    width: 375
+    spaceBetween: 30
   };
 
   ngOnInit(): void {
@@ -260,6 +259,9 @@ export class BotComponent implements OnInit {
           } else {
             this.renderButtons(chatObj, item.attachments);
           }
+        } else if (item.suggestedActions?.actions.length > 0) {
+          chatObj.displayType = 'button';
+          this.renderActions(chatObj, item.suggestedActions?.actions);
         } else if (item.text.length > 0) {
           this.chats.push(chatObj);
         }
@@ -308,10 +310,22 @@ export class BotComponent implements OnInit {
     this.chats.push(copyObject);
   }
 
+  renderActions(chatObj: any, actions: Array<any>): void {
+    chatObj.buttonType = 'ActionButton';
+
+    // if (!chatObj.text || chatObj.text.length === 0) {
+    //   chatObj.text = item.content.text;
+    // }
+
+    chatObj.buttons = actions;
+    this.chats.push(chatObj);
+  }
+
   renderButtons(chatObj: any, attachments: Array<any>): void {
     for (const item of attachments) {
 
       switch (item.contentType) {
+
         case 'application/vnd.microsoft.card.hero':
           chatObj.buttonType = 'ActionButton';
 
