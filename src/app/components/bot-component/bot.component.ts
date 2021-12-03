@@ -32,6 +32,7 @@ export class BotComponent implements OnInit {
   showQuickLinks = false;
   socket: WebSocket | undefined;
   showRefresh = false;
+  token = "";
 
   proactiveTimeout: any;
   activityTimeout: any;
@@ -65,6 +66,7 @@ export class BotComponent implements OnInit {
       (data: any) => {
         this.conversationId = data.conversationId;
         this.webSocketStreamURL = data.streamUrl;
+        this.token = data.token;
         this.initializeWebSocket();
       },
       (error: any) => {
@@ -83,7 +85,7 @@ export class BotComponent implements OnInit {
         if (WebSocket) {
           this.socket = new WebSocket(
             // this.webSocketStreamURL
-            _config.socketURL + '/' + this.conversationId + '/stream?t=' + _config.token
+            _config.socketURL + '/' + this.conversationId + '/stream?t=' + this.token
           );
           this.socket.onopen = function () {
             console.log('onopen');
@@ -175,7 +177,7 @@ export class BotComponent implements OnInit {
     const options: any = {
       'headers': {
         'Accept': 'application/json',
-        'Authorization': 'Bearer ' + _config.token
+        'Authorization': 'Bearer ' + this.token
       }
     };
 
@@ -315,6 +317,8 @@ export class BotComponent implements OnInit {
       });
     }
 
+    this.chats.push(chatObj);
+
     setTimeout(() => {
       var adaptiveCardButtons: any = document.getElementsByClassName('chat-list-holder')[0].getElementsByClassName('ac-pushButton');
 
@@ -328,8 +332,6 @@ export class BotComponent implements OnInit {
         );
       }
     }, 0);
-
-    this.chats.push(chatObj);
   }
 
   renderActions(chatObj: any, actions: Array<any>): void {
